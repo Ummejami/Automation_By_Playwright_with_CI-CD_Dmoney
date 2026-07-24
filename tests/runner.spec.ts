@@ -1,0 +1,102 @@
+//npx playwright test .\\tests\\runner.spec.ts --headed
+//npx playwright codegen https://dmoneyportal.roadtocareer.net
+import { test,expect } from '@playwright/test';
+import { LoginPage } from '../pages/UserLogIn.ts';
+import { Login} from '../pages/AuthorityLogIn.ts';
+import { UserListPage} from '../pages/UserActivation.ts';
+import { RegistrationPage } from '../pages/UserRegistration.ts';
+import {CashInPage} from '../pages/SystemToAgent.ts';
+import { generateEmail,generatePhone } from '../utils/Random.ts';
+
+ 
+const email = generateEmail();
+const phone = generatePhone();
+
+//.....................Agent Registration .....................................
+test('Agent Registration', async ({ page,request, context}) => {
+    const login = new LoginPage(
+        page,
+        request,
+        context
+    );
+    const loginsystem = new Login(
+        page,
+        request,
+        context
+    );
+//.................Visit Url.....................
+  await page.goto('/');
+//......................Sign Up page..........................
+    const signUp = page.getByRole('banner').getByRole('link', { name: 'Sign Up' });
+    await expect(signUp).toBeVisible();
+    await signUp.click();
+//...........................Sign Up Information....................
+    const registrationPage = new RegistrationPage(page);
+    await registrationPage.register(
+        'Isabela Rose',
+        email,
+        '12345',
+        phone,
+        '1234567890123',
+        'Agent'
+    );
+//.............................Back To Home Page..........................
+    await page.getByRole('link', { name: /Back to Home/i }).click();
+//............................Go to Login Page...........................
+
+await page.getByRole('banner').getByRole('link', { name: 'Login' }).click();
+//............................Admin LogIn...............................
+
+    await loginsystem.login(
+        "admin@dmoney.com",
+        "1234"
+    );
+
+    await loginsystem.saveAuthState();
+//..........................Active User.............................
+
+   const userList = new UserListPage(page);
+
+    await userList.openUserList();
+    await userList.selectSearchType('Search by Email');
+    await userList.searchByEmail(email);
+    await userList.viewUser();
+    await userList.editUser();
+    await userList.changeStatus('Active');
+    await userList.saveUser();
+  
+
+
+//................................Admin Logout...............................
+   await userList.logout();
+//................................System Login...............................
+
+    await loginsystem.login(
+        "system@dmoney.com",
+        "1234"
+    );
+
+    await loginsystem.saveAuthState();
+
+//...............................System To Agent......................................
+    const cashInPage = new CashInPage(page);
+
+    await cashInPage.cashIn(phone, '2000');
+//............................System Logout..........................................
+     await userList.logout();
+ 
+
+//............................Agent Login.....................................................
+
+    await login.clearPreviousAuth();
+    await login.login(
+        phone,
+        "12345"
+    );
+    await login.saveAuthState();
+    await page.getByRole('button', { name: 'Balance' }).click();
+//...........................Assertion......................................
+    await expect(page.getByText('2000')).toBeVisible();
+//............................Agent To Customer.............................
+    await cashInPage.cashIn('01773740459', '500');
+});
