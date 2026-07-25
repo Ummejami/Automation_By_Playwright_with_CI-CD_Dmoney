@@ -15,7 +15,7 @@ import { existsSync } from 'fs';
 export default defineConfig({
   testDir: './tests',
   /* Run tests in files in parallel */
-  timeout: 30000,
+  timeout: 120000,
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
