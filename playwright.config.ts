@@ -36,7 +36,7 @@ export default defineConfig({
     headless:true,
     video:'on',
     launchOptions: {
-      slowMo: 1000, // 1000 ms = 1 second delay after each action
+      //slowMo: 1000, // 1000 ms = 1 second delay after each action
     }
   },
 
@@ -44,13 +44,14 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...devices['Desktop Chrome'] , viewport: { width: 1280, height: 720 }, },
+      
     },
 
-     {
-       name: 'firefox',
-       use: { ...devices['Desktop Firefox'] },
-     },
+   //  {
+     //  name: 'firefox',
+       //use: { ...devices['Desktop Firefox'] },
+     //},
 
     // {
       // name: 'webkit',
