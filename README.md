@@ -211,9 +211,13 @@ The following files are ignored:
 
 ```
 node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
 .env
-playwright-report/
-test-results/
+auth.json
 ```
 
 ---
@@ -234,6 +238,6 @@ Email: system@dmoney.com
 Password: 1234
 ```
 
----
+
 
 
