@@ -163,6 +163,9 @@ The report includes:
 - Trace Files
 
 ---
+## Playwright Report Summary
+
+![Playwright Report Summary](Result/summaryView.png)
 
 ## CI/CD
 
